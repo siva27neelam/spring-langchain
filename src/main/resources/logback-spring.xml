@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="com.loanprocessing.security.RedactingPatternLayout">
+        <pattern>{"time":"%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}","level":"%level","message":"%msg","correlationId":"%X{correlationId:-}","requestId":"%X{requestId:-}","applicationId":"%X{applicationId:-}","action":"%X{action:-}","errorClass":"%X{errorClass:-}"}%n</pattern>
+      </layout>
+    </encoder>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>
