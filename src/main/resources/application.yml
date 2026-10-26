@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: loan-processing-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/loan_processing}
+    username: ${DB_USER:loan_app}
+    password: ${SECRET_DB_PASSWORD:loan_app}
+    hikari:
+      maximum-pool-size: 10
+  flyway:
+    enabled: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 21MB
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  mvc:
+    log-request-details: false
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+      group:
+        readiness:
+          include: readinessState,db,configPrime,objectStorage,kmsSelfCheck,migrations
+        liveness:
+          include: livenessState
+  metrics:
+    tags:
+      application: loan-processing-service
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.apache.coyote: WARN
+    org.apache.tomcat: WARN
+    dev.langchain4j: WARN
+
+loan:
+  production: ${LOAN_PRODUCTION:false}
+  fault-injection: false
+  security:
+    mode: ${SECURITY_MODE:header}
+    issuer-uri: ${OIDC_ISSUER_URI:}
+    audience: ${OIDC_AUDIENCE:loan-processing}
+  kms:
+    mode: local
+    cmk-id: ${KMS_CMK_ID:local-cmk}
+    local-master-key: ${LOCAL_KMS_MASTER_KEY:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+  storage:
+    root: ${OBJECT_STORAGE_ROOT:./data/objects}
+  malware:
+    mode: ${MALWARE_SCAN_MODE:fail-closed}
+  llm:
+    client: ${LLM_CLIENT:openai}
+  jobs:
+    enabled: true
+    initial-delay: 2s
+    outbox-delay: 2s
+    lifecycle-delay: 30s
+    refresh-delay: ${CONFIG_REFRESH_INTERVAL:15s}
+  secrets:
+    ssn-hmac-key: ${SECRET_SSN_HMAC_KEY:dGVzdC1obWFjLWtleS10aGlydHktMnRlc3QtaG1hYy1rZXk=}
+  config:
+    four-eyes-enabled: ${CONFIG_FOUR_EYES_ENABLED:true}

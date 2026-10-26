@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loan_processing_test
+    username: loan_app
+    password: loan_app
+
+loan:
+  production: false
+  fault-injection: true
+  security:
+    mode: header
+  kms:
+    mode: local
+    cmk-id: local-cmk
+    local-master-key: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+  secrets:
+    ssn-hmac-key: dGVzdC1obWFjLWtleS10aGlydHktMnRlc3QtaG1hYy1rZXk=
+  malware:
+    mode: scripted
+  llm:
+    client: scripted
+  jobs:
+    enabled: false
+    initial-delay: 1h
+    outbox-delay: 1h
+    lifecycle-delay: 1h
+    refresh-delay: 1h
+  storage:
+    root: target/test-objects
+  config:
+    four-eyes-enabled: true
